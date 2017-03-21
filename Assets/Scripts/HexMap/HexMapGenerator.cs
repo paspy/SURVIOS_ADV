@@ -81,7 +81,8 @@ public class HexMapGenerator : MonoBehaviour {
             }
         }
         CreateWorldBoundary();
-        CreateTerrainFeatures();
+        CreateTerrainLevels();
+        DeployTrees();
         dayNight.RefreshStarPosition();
     }
 
@@ -97,37 +98,53 @@ public class HexMapGenerator : MonoBehaviour {
         }
     }
 
-    void CreateTerrainFeatures() {
+    void CreateTerrainLevels() {
+        // level 0 - deep water - rock land
         var flatLandCells = hexGrid.GetCells().ToList().FindAll(x => x.Elevation < 9).ToList();
 
-        //level 1
+        // level 1 - shallow water - light dirt land 1
         foreach (var cell in flatLandCells) {
             cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 2.5f) ? 1 : 0;
         }
         flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 1 && x.Elevation < 9).ToList();
-        //level 2
+
+        // level 2 - light dirt land 2
         foreach (var cell in flatLandCells) {
             cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 2.5f) ? 2 : 1;
         }
         flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 2 && x.Elevation < 9).ToList();
 
-        //level 3
+        // level 3 - green land 1
         foreach (var cell in flatLandCells) {
             cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 2.0f) ? 3 : 2;
         }
         flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 3 && x.Elevation < 9).ToList();
 
-        //level 4
+        // level 4 - green land 2
         foreach (var cell in flatLandCells) {
             cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 1.5f) ? 4 : 3;
         }
         flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 4 && x.Elevation < 9).ToList();
 
-        //level 5
+        // level 5 - dark dirt land
         foreach (var cell in flatLandCells) {
             cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f) ? 5 : 4;
         }
+        flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 5 && x.Elevation < 9).ToList();
 
+        // level 6 - snow land
+        foreach (var cell in flatLandCells) {
+            cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f) ? 6 : 5;
+        }
+
+    }
+
+    void DeployTrees() {
+        var treeLandCells = hexGrid.GetCells().ToList().FindAll(x => x.Elevation == 3 || x.Elevation == 4).ToList();
+        foreach (var cell in treeLandCells) {
+            if (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f)
+                cell.TreeIndex = pseudoRandom.Next(1, cell.chunk.features.trees.Length + 1);
+        }
     }
 
     int GetSurroundingWallCount(int gridX, int gridY) {

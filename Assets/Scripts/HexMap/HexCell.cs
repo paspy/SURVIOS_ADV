@@ -32,9 +32,9 @@ public class HexCell : MonoBehaviour {
                     terrainTypeIndex = 2;
                     break;
                 case 5:
-                case 6:
                     terrainTypeIndex = 3;
                     break;
+                case 6:
                 case 7:
                 case 8:
                 case 9:
@@ -199,7 +199,7 @@ public class HexCell : MonoBehaviour {
             return specialIndex;
         }
         set {
-            if (specialIndex != value && !HasRiver) {
+            if (specialIndex != value && !HasRiver && !HasTree) {
                 specialIndex = value;
                 RemoveRoads();
                 RefreshSelfOnly();
@@ -212,7 +212,7 @@ public class HexCell : MonoBehaviour {
             return treeIndex;
         }
         set {
-            if (treeIndex != value && !HasRiver) {
+            if (treeIndex != value && !HasRiver && !IsSpecial) {
                 treeIndex = value;
                 RemoveRoads();
                 RefreshSelfOnly();

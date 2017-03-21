@@ -708,14 +708,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7980a4cbe74644514bcd19be773f45c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  treeCollections: []
-  grassCollections: []
+  rockCollections: []
+  grassCollections:
+  - prefabs:
+    - {fileID: 4571342174977250, guid: 7e76eb0d61be925438f77f2b65b8c8f4, type: 2}
+    - {fileID: 4571342174977250, guid: 4bdf1cc8d98ab9d45a816528f530b18c, type: 2}
   animalCollections: []
   special: []
-  Tree:
+  trees:
   - {fileID: 400000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}
-  - {fileID: 400016, guid: 469edab27ab6d004d84af2c4a851bd7f, type: 3}
-  - {fileID: 400004, guid: d027af1092f6b434090f040565e7e656, type: 3}
 --- !u!114 &114000013445900128
 MonoBehaviour:
   m_ObjectHideFlags: 1

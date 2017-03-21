@@ -7,7 +7,7 @@ public class HexFeatureManager : MonoBehaviour {
 
     public Transform[] special;
 
-    public Transform[] Tree;
+    public Transform[] trees;
 
 	Transform container;
 
@@ -85,7 +85,7 @@ public class HexFeatureManager : MonoBehaviour {
 
     public void AddTreeFeature(HexCell cell, Vector3 position) {
         HexHash hash = HexMetrics.SampleHashGrid(position);
-        Transform instance = Instantiate(special[cell.TreeIndex - 1]);
+        Transform instance = Instantiate(trees[cell.TreeIndex - 1]);
         instance.localPosition = HexMetrics.Perturb(position);
         instance.localRotation = Quaternion.Euler(0f, 360f * hash.e, 0f);
         instance.SetParent(container, false);
