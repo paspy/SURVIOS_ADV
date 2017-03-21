@@ -711,8 +711,14 @@ MonoBehaviour:
   rockCollections: []
   grassCollections:
   - prefabs:
-    - {fileID: 4571342174977250, guid: 7e76eb0d61be925438f77f2b65b8c8f4, type: 2}
-    - {fileID: 4571342174977250, guid: 4bdf1cc8d98ab9d45a816528f530b18c, type: 2}
+    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
+    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
+  - prefabs:
+    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
+    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
+  - prefabs:
+    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
+    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
   animalCollections: []
   special: []
   trees:

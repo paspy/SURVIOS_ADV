@@ -82,7 +82,7 @@ public class HexMapGenerator : MonoBehaviour {
         }
         CreateWorldBoundary();
         CreateTerrainLevels();
-        DeployTrees();
+        DeployFeatures();
         dayNight.RefreshStarPosition();
     }
 
@@ -139,11 +139,17 @@ public class HexMapGenerator : MonoBehaviour {
 
     }
 
-    void DeployTrees() {
+    void DeployFeatures() {
         var treeLandCells = hexGrid.GetCells().ToList().FindAll(x => x.Elevation == 3 || x.Elevation == 4).ToList();
         foreach (var cell in treeLandCells) {
-            if (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f)
+            if (pseudoRandom.Next(0, 100) < randomFillPercent * 0.75f)
                 cell.TreeIndex = pseudoRandom.Next(1, cell.chunk.features.trees.Length + 1);
+        }
+
+        var grassLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation == 3 || x.Elevation == 4) && !x.HasTree ).ToList();
+        foreach (var cell in grassLandCells) {
+            if (pseudoRandom.Next(0, 100) < randomFillPercent * 1.5f)
+                cell.GrassLevel = pseudoRandom.Next(0, cell.chunk.features.grassCollections.Length);
         }
     }
 
