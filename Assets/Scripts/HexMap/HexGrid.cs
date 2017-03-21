@@ -23,7 +23,7 @@ public class HexGrid : MonoBehaviour {
     void Awake() {
         HexMetrics.noiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
-        CreateMap(cellCountX, cellCountZ);
+        //CreateMap(cellCountX, cellCountZ);
     }
 
     public bool CreateMap(int x, int z) {
@@ -192,17 +192,5 @@ public class HexGrid : MonoBehaviour {
         }
     }
 
-    //public void GenerateMap(int x, int z) {
-    //    if (!CreateMap(x, z)) {
-    //        Debug.LogError("GenerateMap critical error.");
-    //        return;
-    //    }
 
-    //    for (int i = 0; i < cells.Length; i++) {
-    //        cells[i].Load(reader);
-    //    }
-    //    for (int i = 0; i < chunks.Length; i++) {
-    //        chunks[i].Refresh();
-    //    }
-    //}
 }

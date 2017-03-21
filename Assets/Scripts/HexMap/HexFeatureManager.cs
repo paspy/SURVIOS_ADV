@@ -3,9 +3,11 @@
 public class HexFeatureManager : MonoBehaviour {
 
 	public HexFeatureCollection[]
-		urbanCollections, farmCollections, plantCollections;
+		rockCollections, grassCollections, animalCollections;
 
     public Transform[] special;
+
+    public Transform[] Tree;
 
 	Transform container;
 
@@ -43,10 +45,10 @@ public class HexFeatureManager : MonoBehaviour {
 
 		HexHash hash = HexMetrics.SampleHashGrid(position);
 		Transform prefab = PickPrefab(
-			urbanCollections, cell.UrbanLevel, hash.a, hash.d
+			rockCollections, cell.RockLevel, hash.a, hash.d
 		);
 		Transform otherPrefab = PickPrefab(
-			farmCollections, cell.FarmLevel, hash.b, hash.d
+			grassCollections, cell.GrassLevel, hash.b, hash.d
 		);
 		float usedHash = hash.a;
 		if (prefab) {
@@ -60,7 +62,7 @@ public class HexFeatureManager : MonoBehaviour {
 			usedHash = hash.b;
 		}
 		otherPrefab = PickPrefab(
-			plantCollections, cell.PlantLevel, hash.c, hash.d
+			animalCollections, cell.AnimalLevel, hash.c, hash.d
 		);
 		if (prefab) {
 			if (otherPrefab && hash.c < usedHash) {
@@ -81,7 +83,15 @@ public class HexFeatureManager : MonoBehaviour {
 		instance.SetParent(container, false);
 	}
 
-	public void AddSpecialFeature (HexCell cell, Vector3 position) {
+    public void AddTreeFeature(HexCell cell, Vector3 position) {
+        HexHash hash = HexMetrics.SampleHashGrid(position);
+        Transform instance = Instantiate(special[cell.TreeIndex - 1]);
+        instance.localPosition = HexMetrics.Perturb(position);
+        instance.localRotation = Quaternion.Euler(0f, 360f * hash.e, 0f);
+        instance.SetParent(container, false);
+    }
+
+    public void AddSpecialFeature (HexCell cell, Vector3 position) {
 		HexHash hash = HexMetrics.SampleHashGrid(position);
 		Transform instance = Instantiate(special[cell.SpecialIndex - 1]);
 		instance.localPosition = HexMetrics.Perturb(position);

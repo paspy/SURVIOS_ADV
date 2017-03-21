@@ -9,7 +9,7 @@ public class HexMapEditor : MonoBehaviour {
 	int activeElevation;
 	int activeWaterLevel;
 
-	int activeUrbanLevel, activeFarmLevel, activePlantLevel, activeSpecialIndex;
+	int activeRockLevel, activeGrassLevel, activeAnimalLevel, activeSpecialIndex;
 
 	int activeTerrainTypeIndex;
 
@@ -18,7 +18,7 @@ public class HexMapEditor : MonoBehaviour {
 	bool applyElevation = true;
 	bool applyWaterLevel = true;
 
-	bool applyUrbanLevel, applyFarmLevel, applyPlantLevel, applySpecialIndex;
+	bool applyRockLevel, applyGrassLevel, applyAnimalLevel, applySpecialIndex;
 
 	enum OptionalToggle {
 		Ignore, Yes, No
@@ -51,27 +51,27 @@ public class HexMapEditor : MonoBehaviour {
 	}
 
 	public void SetApplyUrbanLevel (bool toggle) {
-		applyUrbanLevel = toggle;
+		applyRockLevel = toggle;
 	}
 
 	public void SetUrbanLevel (float level) {
-		activeUrbanLevel = (int)level;
+		activeRockLevel = (int)level;
 	}
 
 	public void SetApplyFarmLevel (bool toggle) {
-		applyFarmLevel = toggle;
+		applyGrassLevel = toggle;
 	}
 
 	public void SetFarmLevel (float level) {
-		activeFarmLevel = (int)level;
+		activeGrassLevel = (int)level;
 	}
 
 	public void SetApplyPlantLevel (bool toggle) {
-		applyPlantLevel = toggle;
+		applyAnimalLevel = toggle;
 	}
 
 	public void SetPlantLevel (float level) {
-		activePlantLevel = (int)level;
+		activeAnimalLevel = (int)level;
 	}
 
 	public void SetApplySpecialIndex (bool toggle) {
@@ -177,14 +177,14 @@ public class HexMapEditor : MonoBehaviour {
 			if (applySpecialIndex) {
 				cell.SpecialIndex = activeSpecialIndex;
 			}
-			if (applyUrbanLevel) {
-				cell.UrbanLevel = activeUrbanLevel;
+			if (applyRockLevel) {
+				cell.RockLevel = activeRockLevel;
 			}
-			if (applyFarmLevel) {
-				cell.FarmLevel = activeFarmLevel;
+			if (applyGrassLevel) {
+				cell.GrassLevel = activeGrassLevel;
 			}
-			if (applyPlantLevel) {
-				cell.PlantLevel = activePlantLevel;
+			if (applyAnimalLevel) {
+				cell.AnimalLevel = activeAnimalLevel;
 			}
 			if (riverMode == OptionalToggle.No) {
 				cell.RemoveRiver();

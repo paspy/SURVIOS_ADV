@@ -19,15 +19,18 @@ public class DayNightShifting : MonoBehaviour {
     }
 
     void Start() {
-        var cells = hexGrid.GetCells();
-        var midpoint = cells[cells.Length / 2 + (int)(Mathf.Sqrt(cells.Length) / 2)];
-        Star.transform.position = midpoint.Position;
+        RefreshStarPosition();
     }
 
     void Update() {
         Sun.transform.RotateAround(Vector3.zero, Vector3.right, dayRotateSpeed * Time.deltaTime * skySpeed);
         Moon.transform.RotateAround(Vector3.zero, Vector3.right, dayRotateSpeed * Time.deltaTime * skySpeed);
-        Star.transform.Rotate(Vector3.right, dayRotateSpeed * Time.deltaTime * skySpeed*0.5f);
+        Star.transform.Rotate(Vector3.right, dayRotateSpeed * Time.deltaTime * skySpeed * 0.5f);
+    }
 
+    public void RefreshStarPosition() {
+        var cells = hexGrid.GetCells();
+        var midpoint = cells[cells.Length / 2 + (int)(Mathf.Sqrt(cells.Length) / 2)];
+        Star.transform.position = midpoint.Position;
     }
 }

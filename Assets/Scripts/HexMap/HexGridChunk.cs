@@ -73,6 +73,9 @@ public class HexGridChunk : MonoBehaviour {
             if (cell.IsSpecial) {
                 features.AddSpecialFeature(cell, cell.Position);
             }
+            if (cell.HasTree) {
+                features.AddTreeFeature(cell, cell.Position);
+            }
         }
     }
 
