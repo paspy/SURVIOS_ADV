@@ -145,17 +145,17 @@ public static class HexMetrics {
 		return corners[(int)direction + 1] * waterFactor;
 	}
 
-	public static Vector3 GetBridge (HexDirection direction) {
-		return (corners[(int)direction] + corners[(int)direction + 1]) *
-			blendFactor;
-	}
+    public static Vector3 GetBridge(HexDirection direction) {
+        return (corners[(int)direction] + corners[(int)direction + 1]) *
+            blendFactor;
+    }
 
-	public static Vector3 GetWaterBridge (HexDirection direction) {
-		return (corners[(int)direction] + corners[(int)direction + 1]) *
-			waterBlendFactor;
-	}
+    public static Vector3 GetWaterBridge(HexDirection direction) {
+        return (corners[(int)direction] + corners[(int)direction + 1]) *
+            waterBlendFactor;
+    }
 
-	public static Vector3 TerraceLerp (Vector3 a, Vector3 b, int step) {
+    public static Vector3 TerraceLerp (Vector3 a, Vector3 b, int step) {
 		float h = step * HexMetrics.horizontalTerraceStepSize;
 		a.x += (b.x - a.x) * h;
 		a.z += (b.z - a.z) * h;
@@ -167,23 +167,6 @@ public static class HexMetrics {
 	public static Color TerraceLerp (Color a, Color b, int step) {
 		float h = step * HexMetrics.horizontalTerraceStepSize;
 		return Color.Lerp(a, b, h);
-	}
-
-	public static Vector3 WallLerp (Vector3 near, Vector3 far) {
-		near.x += (far.x - near.x) * 0.5f;
-		near.z += (far.z - near.z) * 0.5f;
-		float v =
-			near.y < far.y ? wallElevationOffset : (1f - wallElevationOffset);
-		near.y += (far.y - near.y) * v + wallYOffset;
-		return near;
-	}
-
-	public static Vector3 WallThicknessOffset (Vector3 near, Vector3 far) {
-		Vector3 offset;
-		offset.x = far.x - near.x;
-		offset.y = 0f;
-		offset.z = far.z - near.z;
-		return offset.normalized * (wallThickness * 0.5f);
 	}
 
 	public static HexEdgeType GetEdgeType (int elevation1, int elevation2) {
