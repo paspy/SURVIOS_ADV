@@ -24,9 +24,9 @@ public class HexCell : MonoBehaviour {
                     terrainTypeIndex = 0;
                     break;
                 case 1:
-                case 2:
                     terrainTypeIndex = 1;
                     break;
+                case 2:
                 case 3:
                 case 4:
                     terrainTypeIndex = 2;

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using System;
 
 [RequireComponent(typeof(HexGrid))]
@@ -140,16 +139,25 @@ public class HexMapGenerator : MonoBehaviour {
     }
 
     void DeployFeatures() {
+        // trees
         var treeLandCells = hexGrid.GetCells().ToList().FindAll(x => x.Elevation == 3 || x.Elevation == 4).ToList();
         foreach (var cell in treeLandCells) {
             if (pseudoRandom.Next(0, 100) < randomFillPercent * 0.75f)
                 cell.TreeIndex = pseudoRandom.Next(1, cell.chunk.features.trees.Length + 1);
         }
 
-        var grassLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation == 3 || x.Elevation == 4) && !x.HasTree ).ToList();
+        // grass
+        var grassLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation >= 2 && x.Elevation <= 4) && !x.HasTree).ToList();
         foreach (var cell in grassLandCells) {
             if (pseudoRandom.Next(0, 100) < randomFillPercent * 1.5f)
                 cell.GrassLevel = pseudoRandom.Next(0, cell.chunk.features.grassCollections.Length);
+        }
+
+        // rocks
+        var rockLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation >= 0 && x.Elevation <= 5) && !x.HasTree).ToList();
+        foreach (var cell in rockLandCells) {
+            if (pseudoRandom.Next(0, 100) < randomFillPercent * 0.75f)
+                cell.RockLevel = pseudoRandom.Next(0, cell.chunk.features.rockCollections.Length);
         }
     }
 
