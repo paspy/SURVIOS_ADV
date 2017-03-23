@@ -41,7 +41,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1444647005622636
 GameObject:
@@ -76,7 +76,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1677224490103752
 GameObject:
@@ -89,12 +89,12 @@ GameObject:
   - component: {fileID: 33039974303261120}
   - component: {fileID: 23273478291153416}
   - component: {fileID: 114957154316615888}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1903668559896206
 GameObject:
@@ -107,12 +107,12 @@ GameObject:
   - component: {fileID: 33951197874796298}
   - component: {fileID: 23622564381714744}
   - component: {fileID: 114293214022414674}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: WaterShore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4179436167498352
 Transform:
@@ -367,10 +367,6 @@ MonoBehaviour:
   - prefabs:
     - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
   animalCollections:
-  - prefabs:
-    - {fileID: 4377934320548366, guid: 9ae0809564eaf324aaf6b3113e5b54f5, type: 2}
-  - prefabs:
-    - {fileID: 4377934320548366, guid: 9ae0809564eaf324aaf6b3113e5b54f5, type: 2}
   - prefabs:
     - {fileID: 4377934320548366, guid: 9ae0809564eaf324aaf6b3113e5b54f5, type: 2}
   special: []

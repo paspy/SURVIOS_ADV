@@ -4,11 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - PlayerA
-  - PlayerB
-  - PlayerC
-  - PlayerD
   - HexGrid
+  - GUI
   layers:
   - Default
   - TransparentFX

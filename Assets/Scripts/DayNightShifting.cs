@@ -4,28 +4,40 @@ using System.Collections;
 public class DayNightShifting : MonoBehaviour {
 
     public Transform Sun;
+    public float MaxSunIntensity = 1.2f;
+    public float MinSunIntensity = 0.0f;
+    public float SunSetPoint = -0.1f;
     public Transform Moon;
+    public float MaxMoonIntensity = 0.3f;
+    public float MinMoonIntensity = 0.1f;
     public Transform Star;
 
-    public float dayRotateSpeed = 10;
-    public float nightRotateSpeed = 20;
+    public float shiftingSpeed = 10;
 
     public HexGrid hexGrid;
 
     float skySpeed = 1;
-
+    Light SunLight;
+    Light MoonLight;
     void Awake() {
-
+        SunLight = Sun.GetComponent<Light>();
+        MoonLight = Moon.GetComponent<Light>();
     }
 
     void Start() {
-        RefreshStarPosition();
+        if (hexGrid.isActiveAndEnabled)
+            RefreshStarPosition();
     }
 
     void Update() {
-        Sun.transform.RotateAround(Vector3.zero, Vector3.right, dayRotateSpeed * Time.deltaTime * skySpeed);
-        Moon.transform.RotateAround(Vector3.zero, Vector3.right, dayRotateSpeed * Time.deltaTime * skySpeed);
-        Star.transform.Rotate(Vector3.right, dayRotateSpeed * Time.deltaTime * skySpeed * 0.5f);
+        Sun.transform.RotateAround(Vector3.zero, Vector3.right, shiftingSpeed * Time.deltaTime * skySpeed);
+        Moon.transform.RotateAround(Vector3.zero, Vector3.right, shiftingSpeed * Time.deltaTime * skySpeed);
+        Star.transform.Rotate(Vector3.right, shiftingSpeed * Time.deltaTime * skySpeed * 0.5f);
+
+        float dot = Mathf.Clamp01((Vector3.Dot(Sun.forward, Vector3.down) - SunSetPoint) / (1 + SunSetPoint));
+        SunLight.intensity = ((MaxSunIntensity - MinSunIntensity) * dot) + MinSunIntensity;
+        dot = Mathf.Clamp01(Vector3.Dot(Moon.forward, Vector3.down));
+        MoonLight.intensity = ((MaxMoonIntensity - MinMoonIntensity) * dot) + MinMoonIntensity;
     }
 
     public void RefreshStarPosition() {

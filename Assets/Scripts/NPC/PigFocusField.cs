@@ -14,8 +14,10 @@ public class PigFocusField : MonoBehaviour {
     }
 
     private void Update() {
-        var targetRotation = Quaternion.LookRotation(target.transform.position - neck.position);
-        neck.rotation = Quaternion.Slerp(neck.rotation, targetRotation, turnSpeed * Time.deltaTime);
+        if (!GetComponentInParent<PigBehavior>().IsFroze) {
+            var targetRotation = Quaternion.LookRotation(target.transform.position - neck.position);
+            neck.rotation = Quaternion.Slerp(neck.rotation, targetRotation, turnSpeed * Time.deltaTime);
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
