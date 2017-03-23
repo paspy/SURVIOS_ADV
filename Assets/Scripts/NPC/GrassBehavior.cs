@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassBehavior : MonoBehaviour {
-
-    // Use this for initialization
+    
+    // random distribute grasses
     void Start() {
         var grassSet = GetComponentsInChildren<Transform>();
         foreach (var grass in grassSet) {
@@ -14,10 +14,5 @@ public class GrassBehavior : MonoBehaviour {
                 grass.position.z + Random.Range(-0.25f, 0.25f)
             );
         }
-    }
-
-    // Update is called once per frame
-    void Update() {
-
     }
 }

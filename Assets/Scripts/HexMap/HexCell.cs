@@ -32,9 +32,9 @@ public class HexCell : MonoBehaviour {
                     terrainTypeIndex = 2;
                     break;
                 case 5:
+                case 6:
                     terrainTypeIndex = 3;
                     break;
-                case 6:
                 case 7:
                 case 8:
                 case 9:

@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 4875657957642580}
   - component: {fileID: 114457536706156796}
   m_Layer: 0
-  m_Name: HexGridChunk 1
+  m_Name: HexGridChunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -362,14 +362,17 @@ MonoBehaviour:
   grassCollections:
   - prefabs:
     - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
+  - prefabs:
     - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
   - prefabs:
     - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
-    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
+  animalCollections:
   - prefabs:
-    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
-    - {fileID: 4986231193131176, guid: 62661eca24e0df84ab00fd5420928def, type: 2}
-  animalCollections: []
+    - {fileID: 4377934320548366, guid: 9ae0809564eaf324aaf6b3113e5b54f5, type: 2}
+  - prefabs:
+    - {fileID: 4377934320548366, guid: 9ae0809564eaf324aaf6b3113e5b54f5, type: 2}
+  - prefabs:
+    - {fileID: 4377934320548366, guid: 9ae0809564eaf324aaf6b3113e5b54f5, type: 2}
   special: []
   trees:
   - {fileID: 400000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}

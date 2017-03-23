@@ -125,15 +125,21 @@ public class HexMapGenerator : MonoBehaviour {
         }
         flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 4 && x.Elevation < 9).ToList();
 
-        // level 5 - dark dirt land
+        // level 5 - dark dirt land 1
         foreach (var cell in flatLandCells) {
             cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f) ? 5 : 4;
         }
         flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 5 && x.Elevation < 9).ToList();
 
-        // level 6 - snow land
+        // level 6 - dark dirt land 2
         foreach (var cell in flatLandCells) {
-            cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f) ? 6 : 5;
+            cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 0.75f) ? 6 : 5;
+        }
+        flatLandCells = flatLandCells.FindAll(x => x.Elevation >= 6 && x.Elevation < 9).ToList();
+
+        // level 7 - snow
+        foreach (var cell in flatLandCells) {
+            cell.Elevation = (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f) ? 7 : 6;
         }
 
     }
@@ -156,8 +162,15 @@ public class HexMapGenerator : MonoBehaviour {
         // rocks
         var rockLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation >= 0 && x.Elevation <= 5) && !x.HasTree).ToList();
         foreach (var cell in rockLandCells) {
-            if (pseudoRandom.Next(0, 100) < randomFillPercent * 0.75f)
+            if (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f)
                 cell.RockLevel = pseudoRandom.Next(0, cell.chunk.features.rockCollections.Length);
+        }
+
+        // animals
+        var animalLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation >= 2 && x.Elevation <= 4) && !x.HasTree).ToList();
+        foreach (var cell in animalLandCells) {
+            if (pseudoRandom.Next(0, 100) < randomFillPercent * 0.25f)
+                cell.AnimalLevel = 1;
         }
     }
 

@@ -23,7 +23,6 @@ public class HexGrid : MonoBehaviour {
     void Awake() {
         HexMetrics.noiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
-        //CreateMap(cellCountX, cellCountZ);
     }
 
     public bool CreateMap(int x, int z) {
@@ -50,13 +49,6 @@ public class HexGrid : MonoBehaviour {
 
         //StartCoroutine(ModifiedCells(0.2f));
         return true;
-    }
-
-    IEnumerator ModifiedCells(float wait) {
-        foreach (var cell in cells) {
-            cell.Elevation += 1;
-            yield return new WaitForSeconds(wait);
-        }
     }
 
     void CreateChunks() {
@@ -106,9 +98,11 @@ public class HexGrid : MonoBehaviour {
         }
         return cells[x + z * cellCountX];
     }
+
     public HexCell[] GetCells() {
         return cells;
     }
+
     public void ShowUI(bool visible) {
         for (int i = 0; i < chunks.Length; i++) {
             chunks[i].ShowUI(visible);

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - PlayerA
   - PlayerB
+  - PlayerC
+  - PlayerD
+  - HexGrid
   layers:
   - Default
   - TransparentFX
