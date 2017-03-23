@@ -68,6 +68,10 @@ public struct HexCoordinates {
         return position;
     }
 
+    public static int GetHexDistance(HexCoordinates a, HexCoordinates b) {
+        return Mathf.Max(Mathf.Max(Mathf.Abs(a.X - b.X), Mathf.Abs(a.Y - b.Y)), Mathf.Abs(a.Z - b.Z));
+    }
+
     public override string ToString() {
         return "(" +
             X.ToString() + ", " + Y.ToString() + ", " + Z.ToString() + ")";

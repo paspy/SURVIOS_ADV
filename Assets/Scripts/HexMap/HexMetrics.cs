@@ -186,8 +186,4 @@ public static class HexMetrics {
 		position.z += (sample.z * 2f - 1f) * cellPerturbStrength;
 		return position;
 	}
-
-    public static int GetHexDistance(HexCoordinates a, HexCoordinates b) {
-        return Mathf.Max(Mathf.Max(Mathf.Abs(a.X - b.X), Mathf.Abs(a.Y - b.Y)), Mathf.Abs(a.Z - b.Z));
-    }
 }

@@ -796,6 +796,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   neck: {fileID: 4423507666308376}
+  turnSpeed: 5
 --- !u!114 &114181635130272116
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -808,6 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
+  freezeDistance: 2
   directionChangeInterval: 1
   maxHeadingChange: 30
   behaviorState: 0

@@ -6,38 +6,27 @@ using UnityEngine;
 public class PigFocusField : MonoBehaviour {
     public Transform neck;
     Transform parent;
+    Transform target;
+    public float turnSpeed = 5;
     private void Start() {
         parent = GetComponentInParent<Transform>();
+        target = parent;
     }
 
     private void Update() {
-
+        var targetRotation = Quaternion.LookRotation(target.transform.position - neck.position);
+        neck.rotation = Quaternion.Slerp(neck.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.tag == "PlayerA" ||
-            other.tag == "PlayerB" ||
-            other.tag == "PlayerC" ||
-            other.tag == "PlayerD") {
-            neck.LookAt(other.transform);
+        if (other.tag == "Player") {
+            target = other.transform;
         }
     }
 
-    private void OnTriggerStay(Collider other) {
-        if (other.tag == "PlayerA" ||
-            other.tag == "PlayerB" ||
-            other.tag == "PlayerC" ||
-            other.tag == "PlayerD") {
-            neck.LookAt(other.transform);
-        }
-    }
-    
     private void OnTriggerExit(Collider other) {
-        if (other.tag == "PlayerA" ||
-            other.tag == "PlayerB" ||
-            other.tag == "PlayerC" ||
-            other.tag == "PlayerD") {
-            neck.transform.eulerAngles = parent.eulerAngles;
+        if (other.tag == "Player") {
+            target = parent;
         }
     }
 

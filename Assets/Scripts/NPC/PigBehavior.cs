@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PigBehavior : MonoBehaviour {
     public float speed = 3;
+    public int freezeDistance = 2;
     public float directionChangeInterval = 1;
     public float maxHeadingChange = 30;
     public PigFSM behaviorState = PigFSM.eIdle;
@@ -17,23 +18,23 @@ public class PigBehavior : MonoBehaviour {
         eEscape,
     }
 
-    CharacterController controller;
+    CharacterController characterCtrl;
+    GameController gameCtrl;
     Vector3 targetRotation;
     HexCell spawnHexCell;
     float heading;
     float stateTimer;
-
     void Awake() {
-        controller = GetComponent<CharacterController>();
+        characterCtrl = GetComponent<CharacterController>();
+        gameCtrl = FindObjectOfType<GameController>();
     }
 
     void Start() {
         heading = Random.Range(0, 360);
         transform.eulerAngles = new Vector3(0, heading, 0);
-        transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+        //transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
         stateTimer = Random.Range(1, 10);
         spawnHexCell = GameObject.FindGameObjectWithTag("HexGrid").GetComponent<HexGrid>().GetCell(transform.position);
-        Debug.Log(spawnHexCell.Position);
     }
 
     void Update() {
@@ -44,7 +45,6 @@ public class PigBehavior : MonoBehaviour {
     void BehaviorFSM() {
         switch (behaviorState) {
             case PigFSM.eIdle: {
-                    GetNewHeading();
                     if ((stateTimer -= Time.deltaTime) <= 0) {
                         stateTimer = Random.Range(1, 10);
                         behaviorState = PigFSM.eWalk;
@@ -53,17 +53,23 @@ public class PigBehavior : MonoBehaviour {
                 }
                 break;
             case PigFSM.eWalk: {
-                    GetNewHeading();
-                    transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, targetRotation, Time.deltaTime * directionChangeInterval);
-                    var forward = transform.TransformDirection(Vector3.forward);
-                    controller.SimpleMove(forward * speed);
-
                     if ((stateTimer -= Time.deltaTime) <= 0) {
                         stateTimer = Random.Range(1, 10);
                         behaviorState = PigFSM.eIdle;
                         LegAnimation.SetBool("Moving", false);
                     }
-
+                    if (gameCtrl.Players != null) {
+                        foreach (var player in gameCtrl.Players) {
+                            var playerHexPos = HexCoordinates.FromPosition(player.transform.position);
+                            var myHexPos = HexCoordinates.FromPosition(transform.position);
+                            if (HexCoordinates.GetHexDistance(playerHexPos, myHexPos) <= freezeDistance) {
+                                GetNewHeading();
+                                transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, targetRotation, Time.deltaTime * directionChangeInterval);
+                                var forward = transform.TransformDirection(Vector3.forward);
+                                characterCtrl.SimpleMove(forward * speed);
+                            }
+                        }
+                    }
                 }
                 break;
             case PigFSM.eEscape: {
