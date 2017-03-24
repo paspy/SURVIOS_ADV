@@ -26,10 +26,6 @@ public class HexMapGenerator : MonoBehaviour {
         GenerateMap();
     }
 
-    void Start() {
-
-    }
-
     public void GenerateMap() {
         switch (worldSize) {
             default:
@@ -52,11 +48,8 @@ public class HexMapGenerator : MonoBehaviour {
             worldSeed = seed.ToString("yyyyMMddHHmmssffff");
         }
         pseudoRandom = new System.Random(worldSeed.GetHashCode());
-
         hexGrid.CreateMap(width, height);
-
         map = new int[width, height];
-
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
@@ -66,7 +59,6 @@ public class HexMapGenerator : MonoBehaviour {
                 }
             }
         }
-
         // smooth
         for (int i = 0; i < smoothTimes; i++) {
             for (int x = 0; x < width; x++) {
@@ -83,6 +75,22 @@ public class HexMapGenerator : MonoBehaviour {
         CreateTerrainLevels();
         DeployFeatures();
         dayNight.RefreshStarPosition();
+    }
+
+    int GetSurroundingWallCount(int gridX, int gridY) {
+        int wallCount = 0;
+        for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++) {
+            for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++) {
+                if (neighbourX >= 0 && neighbourX < width && neighbourY >= 0 && neighbourY < height) {
+                    if (neighbourX != gridX || neighbourY != gridY) {
+                        wallCount += map[neighbourX, neighbourY] / HexMetrics.maxElevation;
+                    }
+                } else {
+                    wallCount++;
+                }
+            }
+        }
+        return wallCount;
     }
 
     void CreateWorldBoundary() {
@@ -145,68 +153,45 @@ public class HexMapGenerator : MonoBehaviour {
     }
 
     void DeployFeatures() {
+        var hexCellsList = hexGrid.GetCells().ToList();
+
         // trees
-        var treeLandCells = hexGrid.GetCells().ToList().FindAll(x => x.Elevation == 3 || x.Elevation == 4).ToList();
+        var treeLandCells = hexCellsList.FindAll(x => x.Elevation == 3 || x.Elevation == 4);
         foreach (var cell in treeLandCells) {
             if (pseudoRandom.Next(0, 100) < randomFillPercent * 0.75f)
                 cell.TreeIndex = pseudoRandom.Next(1, cell.chunk.features.trees.Length + 1);
         }
 
+        // crates
+        var crateLandCells = hexCellsList.FindAll(x => x.Elevation == 6 || x.Elevation == 7);
+        foreach (var cell in crateLandCells) {
+            if (pseudoRandom.Next(0, 100) < randomFillPercent * 2.0f)
+                cell.SpecialIndex = pseudoRandom.Next(1, cell.chunk.features.special.Length + 1);
+        }
+
         // grass
-        var grassLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation >= 2 && x.Elevation <= 4) && !x.HasTree).ToList();
+        var grassLandCells = hexCellsList.FindAll(x => (x.Elevation >= 2 && x.Elevation <= 4) && !x.HasTree);
         foreach (var cell in grassLandCells) {
             if (pseudoRandom.Next(0, 100) < randomFillPercent * 1.5f)
                 cell.GrassLevel = pseudoRandom.Next(0, cell.chunk.features.grassCollections.Length);
         }
 
         // rocks
-        var rockLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation >= 0 && x.Elevation <= 5) && !x.HasTree).ToList();
+        var rockLandCells = hexCellsList.FindAll(x => (x.Elevation >= 0 && x.Elevation <= 5) && !x.HasTree);
         foreach (var cell in rockLandCells) {
             if (pseudoRandom.Next(0, 100) < randomFillPercent * 1.0f)
                 cell.RockLevel = pseudoRandom.Next(0, cell.chunk.features.rockCollections.Length);
         }
 
         // animals
-        var animalLandCells = hexGrid.GetCells().ToList().FindAll(x => (x.Elevation >= 2 && x.Elevation <= 4) && !x.HasTree).ToList();
+        var animalLandCells = hexCellsList.FindAll(x => (x.Elevation >= 2 && x.Elevation <= 4) && !x.HasTree);
         foreach (var cell in animalLandCells) {
             if (pseudoRandom.Next(0, 100) < randomFillPercent * 0.25f)
                 cell.AnimalLevel = 1;
         }
+
     }
 
-    int GetSurroundingWallCount(int gridX, int gridY) {
-        int wallCount = 0;
-        for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++) {
-            for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++) {
-
-                if (neighbourX >= 0 && neighbourX < width && neighbourY >= 0 && neighbourY < height) {
-                    if (neighbourX != gridX || neighbourY != gridY) {
-                        wallCount += map[neighbourX, neighbourY] / HexMetrics.maxElevation;
-                    }
-                } else {
-                    wallCount++;
-                }
-
-            }
-        }
-
-        return wallCount;
-    }
-
-    //private void OnDrawGizmos() {
-    //    if (map != null) {
-    //        var cells = hexGrid.GetCells();
-
-    //        for (int x = 0; x < width; x++) {
-    //            for (int y = 0; y < height; y++) {
-    //                Gizmos.color = (map[x, y] > 0) ? Color.black : Color.white;
-    //                //Vector3 pos = new Vector3(-width / 2 + x + .5f, 0, -height / 2 + y + .5f);
-    //                var cell = cells[width * x + y];
-    //                Gizmos.DrawCube(cell.transform.position, Vector3.one * 10);
-    //            }
-    //        }
-    //    }
-    //}
 }
 
 

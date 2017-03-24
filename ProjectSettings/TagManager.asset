@@ -6,6 +6,10 @@ TagManager:
   tags:
   - HexGrid
   - GUI
+  - Fire
+  - Collectible
+  - Ignitable
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -15,7 +19,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Terrain
   - 
   - 
   - 

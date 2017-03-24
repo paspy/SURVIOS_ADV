@@ -3,8 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GrassBehavior : MonoBehaviour {
-    
-    // random distribute grasses
+
+    [Tooltip("Attach a fire effect gameObject")]
+    public GameObject grassFire;
+
+    [Tooltip("Destroy after this time passed.")]
+    public float ignitedDuration = 15.0f;
+
+    bool onFire;
+    private void Awake() {
+        grassFire.SetActive(false);
+        onFire = false;
+    }
+
     void Start() {
         var grassSet = GetComponentsInChildren<Transform>();
         foreach (var grass in grassSet) {
@@ -15,4 +26,19 @@ public class GrassBehavior : MonoBehaviour {
             );
         }
     }
+
+    public void SetOnFire() {
+        if (onFire) return;
+        onFire = true;
+        grassFire.SetActive(true);
+        Destroy(gameObject, ignitedDuration);
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "Projectile") {
+            SetOnFire();
+        }
+    }
+
+
 }

@@ -22,7 +22,7 @@ public class PigBehavior : MonoBehaviour {
     CharacterController characterCtrl;
     GameController gameCtrl;
     Vector3 targetRotation;
-    HexCell spawnHexCell;
+    //HexCell spawnHexCell;
     float heading;
     float stateTimer;
     void Awake() {
@@ -35,7 +35,7 @@ public class PigBehavior : MonoBehaviour {
         transform.eulerAngles = new Vector3(0, heading, 0);
         transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
         stateTimer = Random.Range(1, 10);
-        spawnHexCell = GameObject.FindGameObjectWithTag("HexGrid").GetComponent<HexGrid>().GetCell(transform.position);
+        //spawnHexCell = GameObject.FindGameObjectWithTag("HexGrid").GetComponent<HexGrid>().GetCell(transform.position);
     }
 
     void Update() {

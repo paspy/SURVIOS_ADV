@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 33404115721021064}
   - component: {fileID: 23721768497308200}
   - component: {fileID: 114981857322756654}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,8 @@ MonoBehaviour:
   animalCollections:
   - prefabs:
     - {fileID: 4377934320548366, guid: 9ae0809564eaf324aaf6b3113e5b54f5, type: 2}
-  special: []
+  special:
+  - {fileID: 435798, guid: 12263925bd92ff44a998598877e693a9, type: 2}
   trees:
   - {fileID: 400000, guid: c91c1eb85782d5748ace27eb4d7415bb, type: 3}
 --- !u!114 &114457536706156796

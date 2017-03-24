@@ -12,14 +12,23 @@ public class MouseLook {
     public float smoothTime = 5f;
     public bool lockCursor = true;
 
+    public Quaternion ChraracterFacingtRot;
 
     private Quaternion m_CharacterTargetRot;
     private Quaternion m_CameraTargetRot;
+    public Quaternion CharacterTargetRot {
+        get { return m_CharacterTargetRot; }
+    }
+    public Quaternion CameraTargetRot {
+        get { return m_CameraTargetRot; }
+    }
+
     private bool m_cursorIsLocked = true;
 
     public void Init(Transform character, Transform camera) {
         m_CharacterTargetRot = character.localRotation;
         m_CameraTargetRot = camera.localRotation;
+        ChraracterFacingtRot = Quaternion.identity;
     }
 
 
@@ -29,6 +38,7 @@ public class MouseLook {
 
         m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
         m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
+        ChraracterFacingtRot *= Quaternion.Euler(-xRot, yRot, 0f);
 
         if (clampVerticalRotation)
             m_CameraTargetRot = ClampRotationAroundXAxis(m_CameraTargetRot);
@@ -55,7 +65,7 @@ public class MouseLook {
     }
 
     public void UpdateCursorLock() {
-        //if the user set "lockCursor" we check & properly lock the cursos
+        //if the user set "lockCursor" we check & properly lock the cursors
         if (lockCursor)
             InternalLockUpdate();
     }

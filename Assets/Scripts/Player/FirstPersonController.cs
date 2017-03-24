@@ -38,6 +38,10 @@ public class FirstPersonController : MonoBehaviour {
     private bool m_Jumping;
     private AudioSource m_AudioSource;
 
+    public bool IsWalking { get { return m_IsWalking; } }
+    public bool IsJump { get { return m_Jump; } }
+    public bool IsJumping { get { return m_Jumping; } }
+    public MouseLook GetMouseLook { get { return m_MouseLook; } }
     // Use this for initialization
     private void Start() {
         m_CharacterController = GetComponent<CharacterController>();
