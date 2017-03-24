@@ -8,6 +8,7 @@ public class PlayerBehavior : MonoBehaviour {
 
     public PlayerType playerType = PlayerType.SinglePlayer;
     public Transform firebolt;
+    public GameObject grabbedObject;
 
     [Range(0, 100)]
     public int hitPoint = 100;
@@ -18,20 +19,23 @@ public class PlayerBehavior : MonoBehaviour {
     [Range(0, 10)]
     public int bacon = 3;
 
-    public bool IsCarryStone = false;
     public bool IsCasting = false;
+
+    public bool attachToCenterOfMass;
 
     FirstPersonController fpctrl;
     Camera eyes;
     Vector3 targetVec3;
     Ray interativeRay;
-    RaycastHit rayHitInfo;
+    RaycastHit hitInfo;
     float maxInterativeLength = 10.0f;
     float castingTime = 3.0f;
+
+
     private void Awake() {
         eyes = GetComponentInChildren<Camera>();
         fpctrl = GetComponent<FirstPersonController>();
-
+        grabbedObject = null;
     }
 
     private void Start() {
@@ -56,15 +60,17 @@ public class PlayerBehavior : MonoBehaviour {
 
         if (Input.GetMouseButton(0)) {
 
-            if (Physics.Raycast(interativeRay, out rayHitInfo, maxInterativeLength)) {
-                Debug.DrawLine(interativeRay.origin, rayHitInfo.point, Color.yellow);
+            if (Physics.Raycast(interativeRay, out hitInfo, maxInterativeLength)) {
+                Debug.DrawLine(interativeRay.origin, hitInfo.point, Color.yellow);
+                if (hitInfo.transform.tag != "Grabbable") return;
+
 
             }
 
         }
-        
+
         if (!fpctrl.IsJump && !fpctrl.IsJumping && fpctrl.IsWalking) {
-            
+
             if (Input.GetMouseButtonDown(1)) {
 
                 var depolyPos = eyes.ScreenToWorldPoint(targetVec3);

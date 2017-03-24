@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 public class PigBehavior : MonoBehaviour {
     public float speed = 3;
     public int freezeDistance = 2;
@@ -17,6 +16,7 @@ public class PigBehavior : MonoBehaviour {
         eIdle = 0,
         eWalk,
         eEscape,
+        eDying,
     }
 
     CharacterController characterCtrl;
@@ -25,6 +25,8 @@ public class PigBehavior : MonoBehaviour {
     //HexCell spawnHexCell;
     float heading;
     float stateTimer;
+    bool isHit = false;
+
     void Awake() {
         characterCtrl = GetComponent<CharacterController>();
         gameCtrl = FindObjectOfType<GameController>();
@@ -39,7 +41,6 @@ public class PigBehavior : MonoBehaviour {
     }
 
     void Update() {
-
         if (gameCtrl.Players != null) {
             foreach (var player in gameCtrl.Players) {
                 var playerHexPos = HexCoordinates.FromPosition(player.transform.position);
@@ -81,6 +82,13 @@ public class PigBehavior : MonoBehaviour {
                 }
 
                 break;
+            case PigFSM.eDying: {
+                    if ((stateTimer -= Time.deltaTime) <= 0) {
+
+                        Destroy(gameObject);
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -91,5 +99,13 @@ public class PigBehavior : MonoBehaviour {
         var ceil = Mathf.Clamp(heading + maxHeadingChange, 0, 360);
         heading = Random.Range(floor, ceil);
         targetRotation = new Vector3(0, heading, 0);
+    }
+
+    public void HitByFirebolt(float time = 5.0f) {
+        isHit = true;
+        stateTimer = time;
+        behaviorState = PigFSM.eDying;
+        Destroy(characterCtrl);
+        GetComponent<Rigidbody>().isKinematic = false;
     }
 }

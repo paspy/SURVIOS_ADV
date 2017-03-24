@@ -10,6 +10,7 @@ TagManager:
   - Collectible
   - Ignitable
   - Projectile
+  - Grabbable
   layers:
   - Default
   - TransparentFX

@@ -54,10 +54,13 @@ public class FireboltBehavior : MonoBehaviour {
             //Debug.Log("Hit: " + hit.gameObject.name);
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             var grass = hit.GetComponent<GrassBehavior>();
-            if (rb != null)
-                rb.AddExplosionForce(expolsionPower, explosionPos, expolsionRadius, 3.0F);
+            var pig = hit.GetComponent<PigBehavior>();
+            if (pig != null)
+                pig.HitByFirebolt();
             if (grass != null)
                 grass.SetOnFire();
+            if (rb != null)
+                rb.AddExplosionForce(expolsionPower, explosionPos, expolsionRadius, 3.0F);
         }
 
         Destroy(gameObject, 1.0f);
