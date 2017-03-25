@@ -6,12 +6,16 @@ using DigitalRuby.PyroParticles;
 
 public class PlayerBehavior : MonoBehaviour {
     public enum PlayerType { SinglePlayer = 0, Player_A, Player_B }
+    public PlayerType playerType = PlayerType.SinglePlayer;
 
+    public Scrollbar HPIndicator;
+    public Scrollbar ManaIndicator;
+    public Scrollbar BaconIndicator;
     public Scrollbar throwingIndicator;
     public Scrollbar castingIndicator;
     public Image damageIndicator;
+    public Text GameOverText;
 
-    public PlayerType playerType = PlayerType.SinglePlayer;
     public Transform firebolt;
     public Transform magicLight;
     public GameObject grabbedObject;
@@ -21,6 +25,7 @@ public class PlayerBehavior : MonoBehaviour {
 
     [Range(0, 100)]
     public int Mana = 100;
+    private float manaBuffer = 0;
 
     [Range(0, 10)]
     public int Bacon = 3;
@@ -72,6 +77,17 @@ public class PlayerBehavior : MonoBehaviour {
         castingTime = 0;
     }
 
+    void UpdateHUD() {
+        ManaIndicator.size = Mana * 0.01f;
+        ManaIndicator.GetComponentInChildren<Text>().text = Mana.ToString();
+
+        HPIndicator.size = HP * 0.01f;
+        HPIndicator.GetComponentInChildren<Text>().text = HP.ToString();
+
+        BaconIndicator.size = Bacon * 0.1f;
+        BaconIndicator.GetComponentInChildren<Text>().text = Bacon.ToString();
+    }
+
     private void Update() {
 
         if (curDamageFading > 0) {
@@ -112,8 +128,6 @@ public class PlayerBehavior : MonoBehaviour {
                 throwingPower = 0.0f;
             }
 
-
-
             if (Input.GetMouseButtonDown(1) && !IsGrabbing && !IsCasting && Mana >= 20) {
                 IsCasting = true;
                 castingIndicator.gameObject.SetActive(IsCasting);
@@ -125,7 +139,6 @@ public class PlayerBehavior : MonoBehaviour {
                 castingIndicator.colors = cb;
                 CastingFirebolt();
             }
-
 
             if (Input.GetKeyDown(KeyCode.F)) {
                 isLightOn = !isLightOn;
@@ -139,6 +152,14 @@ public class PlayerBehavior : MonoBehaviour {
             ResetGrabbing();
         }
 
+        if (Mana < 100) {
+            if ((manaBuffer += Time.deltaTime) >= 1) {
+                manaBuffer = 0;
+                Mana++;
+            }
+        }
+
+        UpdateHUD();
     }
 
     private void CastingFirebolt() {

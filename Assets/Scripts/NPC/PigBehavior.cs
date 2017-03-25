@@ -100,7 +100,7 @@ public class PigBehavior : MonoBehaviour {
 
     public void HitByFirebolt(Transform owner, float time = 3.0f) {
         if (!Hit) {
-            if (Random.Range(0, 100) <= 20 && Drop != null) {
+            if (Random.Range(0, 100) <= 5 && Drop != null) {
                 Drop.GetComponent<CollectibleBehavior>().owner = owner;
                 Instantiate(Drop, transform.position, Quaternion.identity);
             }
