@@ -794,6 +794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ddb8194b15f20d4a8ab045106459962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Drop: {fileID: 4525101566287716, guid: 57a6a71a38c9db147b8e9b5d827eed49, type: 2}
   speed: 2
   freezeDistance: 3
   IsFroze: 0

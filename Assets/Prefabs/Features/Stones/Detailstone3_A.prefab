@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 2300000}
   - component: {fileID: 54441168445397946}
   - component: {fileID: 64309780393269916}
+  - component: {fileID: 114203811851781878}
+  - component: {fileID: 136390944394574928}
   m_Layer: 0
   m_Name: Detailstone3_A
   m_TagString: Grabbable
@@ -29,7 +31,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -125,3 +127,30 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: d74c02c3fd5a89644a7d71732e56b9db, type: 3}
+--- !u!114 &114203811851781878
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8498685b57adba45809222e5b127597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Grabber: {fileID: 0}
+  speed: 0
+  damage: 20
+--- !u!136 &136390944394574928
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.3476099
+  m_Height: 0.12099954
+  m_Direction: 1
+  m_Center: {x: -0.1469565, y: 0.21611649, z: -0.14542246}

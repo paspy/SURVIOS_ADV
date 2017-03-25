@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PigBehavior : MonoBehaviour {
+    public Transform Drop;
     public float speed = 3;
     public int freezeDistance = 2;
     public bool IsFroze;
@@ -15,17 +16,15 @@ public class PigBehavior : MonoBehaviour {
     public enum PigFSM {
         eIdle = 0,
         eWalk,
-        eEscape,
         eDying,
     }
 
     CharacterController characterCtrl;
     GameController gameCtrl;
     Vector3 targetRotation;
-    //HexCell spawnHexCell;
     float heading;
     float stateTimer;
-    bool isHit = false;
+    bool Hit = false;
 
     void Awake() {
         characterCtrl = GetComponent<CharacterController>();
@@ -37,7 +36,11 @@ public class PigBehavior : MonoBehaviour {
         transform.eulerAngles = new Vector3(0, heading, 0);
         transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
         stateTimer = Random.Range(1, 10);
-        //spawnHexCell = GameObject.FindGameObjectWithTag("HexGrid").GetComponent<HexGrid>().GetCell(transform.position);
+        if (Drop != null) {
+            var cb = Drop.GetComponent<CollectibleBehavior>();
+            cb.type = CollectibleBehavior.CollectibleType.Bacon;
+            cb.IsRandomSupply = false;
+        }
     }
 
     void Update() {
@@ -77,14 +80,8 @@ public class PigBehavior : MonoBehaviour {
 
                 }
                 break;
-            case PigFSM.eEscape: {
-
-                }
-
-                break;
             case PigFSM.eDying: {
                     if ((stateTimer -= Time.deltaTime) <= 0) {
-
                         Destroy(gameObject);
                     }
                 }
@@ -101,11 +98,18 @@ public class PigBehavior : MonoBehaviour {
         targetRotation = new Vector3(0, heading, 0);
     }
 
-    public void HitByFirebolt(float time = 5.0f) {
-        isHit = true;
+    public void HitByFirebolt(Transform owner, float time = 3.0f) {
+        if (!Hit) {
+            if (Random.Range(0, 100) <= 20 && Drop != null) {
+                Drop.GetComponent<CollectibleBehavior>().owner = owner;
+                Instantiate(Drop, transform.position, Quaternion.identity);
+            }
+        }
         stateTimer = time;
         behaviorState = PigFSM.eDying;
         Destroy(characterCtrl);
         GetComponent<Rigidbody>().isKinematic = false;
+        Hit = true;
+
     }
 }

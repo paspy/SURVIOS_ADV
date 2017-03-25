@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Estuary
-  m_Shader: {fileID: 4800000, guid: 2e44ff6aadac34b18ab4e065d493f0b8, type: 3}
+  m_Name: WaterShore
+  m_Shader: {fileID: 4800000, guid: 19f0e309945e6423da6ef0f96f72debf, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
