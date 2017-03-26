@@ -49,10 +49,12 @@ public class PigBehavior : MonoBehaviour {
             var myHexPos = HexCoordinates.FromPosition(transform.position);
             IsFroze = (HexCoordinates.GetHexDistance(playerHexPos, myHexPos) > freezeDistance);
         }
-        if (gameCtrl.PlayerB != null && !gameCtrl.setting.IsSinglePlayer) {
-            var playerHexPos = HexCoordinates.FromPosition(gameCtrl.PlayerB.transform.position);
-            var myHexPos = HexCoordinates.FromPosition(transform.position);
-            IsFroze = (HexCoordinates.GetHexDistance(playerHexPos, myHexPos) > freezeDistance);
+        if (gameCtrl.setting != null) {
+            if (gameCtrl.PlayerB != null && !gameCtrl.setting.IsSinglePlayer) {
+                var playerHexPos = HexCoordinates.FromPosition(gameCtrl.PlayerB.transform.position);
+                var myHexPos = HexCoordinates.FromPosition(transform.position);
+                IsFroze = (HexCoordinates.GetHexDistance(playerHexPos, myHexPos) > freezeDistance);
+            }
         }
 
         BehaviorFSM();
@@ -98,8 +100,11 @@ public class PigBehavior : MonoBehaviour {
 
     public void HitByProjectile(Transform owner, float time = 3.5f) {
         if (!Hit) {
-            if (Random.Range(0, 100) <= 5 && Drop != null) {
+            if (Random.Range(0, 100) <= 15 && Drop != null) {
                 Drop.GetComponent<CollectibleBehavior>().owner = owner;
+                Drop.GetComponent<CollectibleBehavior>().IsRandomSupply = false;
+                Drop.GetComponent<CollectibleBehavior>().type = CollectibleBehavior.CollectibleType.Bacon;
+
                 Instantiate(Drop, transform.position, Quaternion.identity);
             }
         }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 114274325541062438}
   m_Layer: 0
   m_Name: Crate
-  m_TagString: Collectible
+  m_TagString: Grabbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,3 +120,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e43c1dbc896254caeb103e3f1211c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Drop: {fileID: 4525101566287716, guid: 57a6a71a38c9db147b8e9b5d827eed49, type: 2}

@@ -37,7 +37,7 @@ public class CollectibleBehavior : MonoBehaviour {
                 var player = owner.GetComponent<PlayerBehavior>();
                 switch (type) {
                     case CollectibleType.Health:
-                        player.HP += 10;
+                        player.HP += 20;
                         break;
                     case CollectibleType.Mana:
                         player.Mana = 100;

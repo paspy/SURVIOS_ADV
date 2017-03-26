@@ -116,6 +116,11 @@ public class PlayerBehavior : MonoBehaviour {
 
         BaconIndicator.size = Bacon * 0.1f;
         BaconIndicator.GetComponentInChildren<Text>().text = Bacon.ToString();
+
+        if (HP > 100) HP = 100;
+        if (Mana > 100) Mana = 100;
+        if (Bacon > 10) Bacon = 10;
+
     }
 
     void UpdateInput() {
@@ -188,6 +193,11 @@ public class PlayerBehavior : MonoBehaviour {
                         stone.AssignToGrabber(transform);
                         grabbedObject = stone.gameObject;
                     }
+                    var crate = hitInfo.transform.GetComponent<CrateBehavior>();
+                    if (crate!= null) {
+                        crate.SpawnSupply(transform);
+                        return;
+                    }
                     IsGrabbing = true;
                     throwingIndicator.gameObject.SetActive(IsGrabbing);
 
@@ -206,7 +216,7 @@ public class PlayerBehavior : MonoBehaviour {
                 throwingPower = 0.0f;
             }
 
-            if (castingKeyPress && !IsGrabbing && !IsCasting && Mana >= 20) {
+            if (castingKeyPress && !IsGrabbing && !IsCasting && Mana >= 15) {
                 IsCasting = true;
                 castingIndicator.gameObject.SetActive(IsCasting);
             }
@@ -231,13 +241,14 @@ public class PlayerBehavior : MonoBehaviour {
         }
 
         if (Mana < 100) {
-            if ((manaBuffer += Time.deltaTime) >= 1) {
+            if ((manaBuffer += Time.deltaTime) >= 2) {
                 manaBuffer = 0;
-                Mana += 2;
+                Mana += 1;
             }
         }
 
-        if (HP <= 0) {
+        // win lost
+        if (HP <= 0 || Bacon <= 0) {
             GameOverText.gameObject.SetActive(true);
             GameOverText.color = Color.blue;
             GameOverText.text = "LOST";
@@ -252,7 +263,7 @@ public class PlayerBehavior : MonoBehaviour {
             projectile.gameObject.GetComponent<FireboltBehavior>().movingDirection = rayFromEye.direction;
             projectile.gameObject.GetComponent<FireboltBehavior>().owner = transform;
             ResetCasting();
-            Mana -= 20;
+            Mana -= 15;
         }
     }
 

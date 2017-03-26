@@ -12,11 +12,11 @@ public class DayNightShifting : MonoBehaviour {
     public float MinMoonIntensity = 0.1f;
     public Transform Star;
 
-    public float shiftingSpeed = 10;
+    public float shiftingSpeed = 1;
 
     public HexGrid hexGrid;
 
-    float skySpeed = 1;
+
     Light SunLight;
     Light MoonLight;
     void Awake() {
@@ -30,9 +30,9 @@ public class DayNightShifting : MonoBehaviour {
     }
 
     void Update() {
-        Sun.transform.RotateAround(Vector3.zero, Vector3.right, shiftingSpeed * Time.deltaTime * skySpeed);
-        Moon.transform.RotateAround(Vector3.zero, Vector3.right, shiftingSpeed * Time.deltaTime * skySpeed);
-        Star.transform.Rotate(Vector3.right, shiftingSpeed * Time.deltaTime * skySpeed * 0.5f);
+        Sun.transform.RotateAround(Vector3.zero, Vector3.right, shiftingSpeed * Time.deltaTime);
+        Moon.transform.RotateAround(Vector3.zero, Vector3.right, shiftingSpeed * Time.deltaTime);
+        Star.transform.Rotate(Vector3.right, shiftingSpeed * Time.deltaTime * 0.5f);
 
         float dot = Mathf.Clamp01((Vector3.Dot(Sun.forward, Vector3.down) - SunSetPoint) / (1 + SunSetPoint));
         SunLight.intensity = ((MaxSunIntensity - MinSunIntensity) * dot) + MinSunIntensity;
