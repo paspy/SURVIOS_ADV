@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -13,8 +13,16 @@ public class GameController : MonoBehaviour {
     public HexGrid hexGrid;
     public Setting setting;
 
+    public Text StarvingTimer;
+
     [SerializeField]
     bool isSingleMode = true;
+
+    [SerializeField]
+    float maxStarvingTimer = 120.0f;
+
+    float starvingBuffer;
+
 
     private void Awake() {
         var go = GameObject.FindGameObjectWithTag("Setting");
@@ -42,6 +50,7 @@ public class GameController : MonoBehaviour {
         PlayerA.transform.position = new Vector3(placeOne.Position.x, PlayerA.transform.position.y, placeOne.Position.z);
         PlayerB.transform.position = new Vector3(placeTwo.Position.x, PlayerB.transform.position.y, placeTwo.Position.z);
 
+        starvingBuffer = maxStarvingTimer;
     }
 
     private void Update() {
@@ -64,11 +73,18 @@ public class GameController : MonoBehaviour {
             BackToMainMenu();
         }
 
+        if ((starvingBuffer -= Time.deltaTime) <= 0) {
+            starvingBuffer = maxStarvingTimer;
+            PlayerA.GetComponent<PlayerBehavior>().Bacon -= 1;
+            PlayerB.GetComponent<PlayerBehavior>().Bacon -= 1;
+        }
+        StarvingTimer.text = starvingBuffer.ToString("N1");
+
     }
 
     public void BackToMainMenu() {
+        Destroy(setting.gameObject);
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
-
     }
 
 }
