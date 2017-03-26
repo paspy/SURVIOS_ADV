@@ -57,6 +57,9 @@ public class GameController : MonoBehaviour {
         var hexP1 = HexCoordinates.FromPosition(PlayerA.transform.position);
         var hexP2 = HexCoordinates.FromPosition(PlayerB.transform.position);
 
+        var p1 = PlayerA.GetComponent<PlayerBehavior>();
+        var p2 = PlayerB.GetComponent<PlayerBehavior>();
+
         if (HexCoordinates.GetHexDistance(hexP1, hexP2) >= 8) {
             foreach (var indicator in OutOfRangeIndicators) {
                 indicator.SetActive(true);
@@ -68,21 +71,42 @@ public class GameController : MonoBehaviour {
         }
 
         if (Input.GetKeyDown(KeyCode.F12)) {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
             BackToMainMenu();
         }
 
         if ((starvingBuffer -= Time.deltaTime) <= 0) {
             starvingBuffer = maxStarvingTimer;
-            PlayerA.GetComponent<PlayerBehavior>().Bacon -= 1;
-            PlayerB.GetComponent<PlayerBehavior>().Bacon -= 1;
+            p1.Bacon -= 1;
+            p2.Bacon -= 1;
         }
         StarvingTimer.text = starvingBuffer.ToString("N1");
 
+        if (p1.HP <= 0 || p1.Bacon <= 0) {
+            p1.GameOverText.gameObject.SetActive(true);
+            p1.GameOverText.color = Color.blue;
+            p1.GameOverText.text = "LOST";
+            StartCoroutine(BackToMainDelay());
+        }
+
+        if (!isSingleMode) {
+            if (p2.HP <= 0 || p2.Bacon <= 0) {
+                p2.GameOverText.gameObject.SetActive(true);
+                p2.GameOverText.color = Color.blue;
+                p2.GameOverText.text = "LOST";
+                StartCoroutine(BackToMainDelay());
+            }
+        }
+
+
+    }
+    IEnumerator BackToMainDelay() {
+        yield return new WaitForSeconds(5.0f);
+        BackToMainMenu();
     }
 
     public void BackToMainMenu() {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         Destroy(setting.gameObject);
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }

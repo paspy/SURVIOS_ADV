@@ -154,13 +154,13 @@ public class PlayerBehavior : MonoBehaviour {
                 if (prevGamePadStateTwo.IsConnected) {
                     lightKeyPress =
                         prevGamePadStateTwo.Buttons.Y == ButtonState.Released &&
-                        prevGamePadStateTwo.Buttons.Y == ButtonState.Pressed;
+                        currGamePadStateTwo.Buttons.Y == ButtonState.Pressed;
                     grabbingKeyPress =
                         prevGamePadStateTwo.Buttons.LeftShoulder == ButtonState.Pressed &&
-                        prevGamePadStateTwo.Buttons.LeftShoulder == ButtonState.Pressed;
+                        currGamePadStateTwo.Buttons.LeftShoulder == ButtonState.Pressed;
                     castingKeyPress =
                         prevGamePadStateTwo.Buttons.B == ButtonState.Released &&
-                        prevGamePadStateTwo.Buttons.B == ButtonState.Pressed;
+                        currGamePadStateTwo.Buttons.B == ButtonState.Pressed;
 
                 }
                 break;
@@ -246,14 +246,6 @@ public class PlayerBehavior : MonoBehaviour {
                 Mana += 1;
             }
         }
-
-        // win lost
-        if (HP <= 0 || Bacon <= 0) {
-            GameOverText.gameObject.SetActive(true);
-            GameOverText.color = Color.blue;
-            GameOverText.text = "LOST";
-        }
-
         UpdateHUD();
     }
 
