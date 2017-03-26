@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GrassBehavior : MonoBehaviour {
 
-    [Tooltip("Attach a fire effect gameObject")]
     public GameObject grassFire;
 
-    [Tooltip("Destroy after this time passed.")]
     public float ignitedDuration = 15.0f;
+    public float damageRadius = 2.5f;
 
     bool onFire;
+    float damagePerSec = 0;
     private void Awake() {
         grassFire.SetActive(false);
         onFire = false;
@@ -24,6 +24,22 @@ public class GrassBehavior : MonoBehaviour {
                 grass.position.y,
                 grass.position.z + Random.Range(-0.25f, 0.25f)
             );
+        }
+    }
+
+    private void Update() {
+        if (onFire && (damagePerSec += Time.deltaTime) >= 1) {
+            damagePerSec = 0;
+            Vector3 damagePos = transform.position;
+            Collider[] colliders = Physics.OverlapSphere(damagePos, damageRadius);
+            foreach (Collider hit in colliders) {
+                var pig = hit.GetComponent<PigBehavior>();
+                var player = hit.GetComponent<PlayerBehavior>();
+                if (pig != null)
+                    pig.HitByProjectile(null);
+                if (player != null)
+                    player.ApplyDamage(-5);
+            }
         }
     }
 

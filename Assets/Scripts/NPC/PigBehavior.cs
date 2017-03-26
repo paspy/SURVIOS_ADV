@@ -15,8 +15,7 @@ public class PigBehavior : MonoBehaviour {
     public Vector3 hexPosition;
     public enum PigFSM {
         eIdle = 0,
-        eWalk,
-        eDying,
+        eWalk
     }
 
     CharacterController characterCtrl;
@@ -44,12 +43,16 @@ public class PigBehavior : MonoBehaviour {
     }
 
     void Update() {
-        if (gameCtrl.Players != null) {
-            foreach (var player in gameCtrl.Players) {
-                var playerHexPos = HexCoordinates.FromPosition(player.transform.position);
-                var myHexPos = HexCoordinates.FromPosition(transform.position);
-                IsFroze = (HexCoordinates.GetHexDistance(playerHexPos, myHexPos) > freezeDistance);
-            }
+
+        if (gameCtrl.PlayerA != null) {
+            var playerHexPos = HexCoordinates.FromPosition(gameCtrl.PlayerA.transform.position);
+            var myHexPos = HexCoordinates.FromPosition(transform.position);
+            IsFroze = (HexCoordinates.GetHexDistance(playerHexPos, myHexPos) > freezeDistance);
+        }
+        if (gameCtrl.PlayerB != null && !gameCtrl.setting.IsSinglePlayer) {
+            var playerHexPos = HexCoordinates.FromPosition(gameCtrl.PlayerB.transform.position);
+            var myHexPos = HexCoordinates.FromPosition(transform.position);
+            IsFroze = (HexCoordinates.GetHexDistance(playerHexPos, myHexPos) > freezeDistance);
         }
 
         BehaviorFSM();
@@ -76,14 +79,9 @@ public class PigBehavior : MonoBehaviour {
                     GetNewHeading();
                     transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, targetRotation, Time.deltaTime * directionChangeInterval);
                     var forward = transform.TransformDirection(Vector3.forward);
-                    characterCtrl.SimpleMove(forward * speed);
+                    if (characterCtrl)
+                        characterCtrl.SimpleMove(forward * speed);
 
-                }
-                break;
-            case PigFSM.eDying: {
-                    if ((stateTimer -= Time.deltaTime) <= 0) {
-                        Destroy(gameObject);
-                    }
                 }
                 break;
             default:
@@ -98,7 +96,7 @@ public class PigBehavior : MonoBehaviour {
         targetRotation = new Vector3(0, heading, 0);
     }
 
-    public void HitByFirebolt(Transform owner, float time = 3.0f) {
+    public void HitByProjectile(Transform owner, float time = 3.5f) {
         if (!Hit) {
             if (Random.Range(0, 100) <= 5 && Drop != null) {
                 Drop.GetComponent<CollectibleBehavior>().owner = owner;
@@ -106,8 +104,8 @@ public class PigBehavior : MonoBehaviour {
             }
         }
         stateTimer = time;
-        behaviorState = PigFSM.eDying;
         Destroy(characterCtrl);
+        Destroy(gameObject, time);
         GetComponent<Rigidbody>().isKinematic = false;
         Hit = true;
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FireboltBehavior : MonoBehaviour {
@@ -12,6 +13,7 @@ public class FireboltBehavior : MonoBehaviour {
     public AudioClip[] exposionSFXs;
 
     public float speed = 100.0f;
+    public int damage = 20;
     public float expolsionRadius = 5.0f;
     public float expolsionPower = 50.0f;
     public float expireTime = 5.0f;
@@ -59,18 +61,22 @@ public class FireboltBehavior : MonoBehaviour {
         sfxSource.Play();
 
         Vector3 explosionPos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, expolsionRadius);
+        var colliders = Physics.OverlapSphere(explosionPos, expolsionRadius).ToList();
+        var playerCol = colliders.Find(x => x.GetComponent<PlayerBehavior>() != null);
+        if (playerCol != null)
+            playerCol.GetComponent<PlayerBehavior>().ApplyDamage(-damage);
+
         foreach (Collider hit in colliders) {
-            //Debug.Log("Hit: " + hit.gameObject.name);
+            //Debug.Log("Hit: " + hit.gameObject.name + " From: " + owner.name);
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             var grass = hit.GetComponent<GrassBehavior>();
             var pig = hit.GetComponent<PigBehavior>();
             if (pig != null)
-                pig.HitByFirebolt(owner);
+                pig.HitByProjectile(owner);
             if (grass != null)
                 grass.SetOnFire();
             if (rb != null)
-                rb.AddExplosionForce(expolsionPower, explosionPos, expolsionRadius, 3.0F);
+                rb.AddExplosionForce(expolsionPower, explosionPos, expolsionRadius, 3.0f);
         }
 
         Destroy(gameObject, 1.25f);

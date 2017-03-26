@@ -54,4 +54,11 @@ public class CollectibleBehavior : MonoBehaviour {
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "Player" && owner != null) {
+            owner = other.transform;
+        }
+    }
+
 }

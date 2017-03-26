@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using XInputDotNetPure;
 
 [Serializable]
 public class MouseLook {
@@ -12,8 +13,6 @@ public class MouseLook {
     public float smoothTime = 5f;
     public bool lockCursor = true;
 
-    public Quaternion ChraracterFacingtRot;
-
     private Quaternion m_CharacterTargetRot;
     private Quaternion m_CameraTargetRot;
     public Quaternion CharacterTargetRot {
@@ -24,21 +23,47 @@ public class MouseLook {
     }
 
     private bool m_cursorIsLocked = true;
+    GamePadState gamePadStateOne;
+    GamePadState gamePadStateTwo;
+    Transform player;
 
     public void Init(Transform character, Transform camera) {
         m_CharacterTargetRot = character.localRotation;
         m_CameraTargetRot = camera.localRotation;
-        ChraracterFacingtRot = Quaternion.identity;
+        player = character;
     }
 
 
     public void LookRotation(Transform character, Transform camera) {
-        float yRot = Input.GetAxis("Mouse X") * XSensitivity;
-        float xRot = Input.GetAxis("Mouse Y") * YSensitivity;
+        var p = player.GetComponent<PlayerBehavior>();
+        gamePadStateOne = GamePad.GetState(PlayerIndex.One);
+        gamePadStateTwo = GamePad.GetState(PlayerIndex.Two);
+
+        float yRot = 0, xRot = 0;
+        switch (p.playerType) {
+            default:
+            case PlayerBehavior.PlayerType.SinglePlayer:
+                yRot = Input.GetAxis("Mouse X") * XSensitivity;
+                xRot = Input.GetAxis("Mouse Y") * YSensitivity;
+                break;
+            case PlayerBehavior.PlayerType.Player_A:
+                if (gamePadStateOne.IsConnected) {
+                    yRot = gamePadStateOne.ThumbSticks.Right.X * 5.0f;
+                    xRot = gamePadStateOne.ThumbSticks.Right.Y * 5.0f;
+                }
+                break;
+            case PlayerBehavior.PlayerType.Player_B:
+                if (gamePadStateTwo.IsConnected) {
+                    yRot = gamePadStateTwo.ThumbSticks.Right.X * 5.0f;
+                    xRot = gamePadStateTwo.ThumbSticks.Right.Y * 5.0f;
+                }
+                break;
+        }
+        
+        
 
         m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);
         m_CameraTargetRot *= Quaternion.Euler(-xRot, 0f, 0f);
-        ChraracterFacingtRot *= Quaternion.Euler(-xRot, yRot, 0f);
 
         if (clampVerticalRotation)
             m_CameraTargetRot = ClampRotationAroundXAxis(m_CameraTargetRot);
@@ -53,7 +78,7 @@ public class MouseLook {
             camera.localRotation = m_CameraTargetRot;
         }
 
-        UpdateCursorLock();
+        //UpdateCursorLock();
     }
 
     public void SetCursorLock(bool value) {

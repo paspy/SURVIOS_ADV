@@ -22,7 +22,7 @@ public class PigFocusField : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (other.tag == "Player") {
-            target = other.transform;
+            target = other.GetComponentInChildren<Camera>().transform;
         }
     }
 

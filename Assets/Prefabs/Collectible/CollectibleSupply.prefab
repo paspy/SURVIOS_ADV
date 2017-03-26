@@ -92,14 +92,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a012632ac8a658749888b27e2b66e22d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 2
   mats:
   - {fileID: 2100000, guid: b41962e8d78728541a83ad875ece0bfc, type: 2}
   - {fileID: 2100000, guid: 8372cc429bf449d4c96c627bda1e1f11, type: 2}
   - {fileID: 2100000, guid: 649c4ad57d8e84846a7d4bab73efafa9, type: 2}
   IsRandomSupply: 0
   owner: {fileID: 0}
-  speed: 10
 --- !u!135 &135850153138038056
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -107,8 +106,8 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1067163578012332}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}

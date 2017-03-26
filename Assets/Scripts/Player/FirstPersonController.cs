@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using XInputDotNetPure;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AudioSource))]
@@ -42,6 +43,13 @@ public class FirstPersonController : MonoBehaviour {
     public bool IsJump { get { return m_Jump; } }
     public bool IsJumping { get { return m_Jumping; } }
     public MouseLook GetMouseLook { get { return m_MouseLook; } }
+
+    GamePadState prevGamePadStateOne;
+    GamePadState currGamePadStateOne;
+
+    GamePadState prevGamePadStateTwo;
+    GamePadState currGamePadStateTwo;
+
     // Use this for initialization
     private void Start() {
         m_CharacterController = GetComponent<CharacterController>();
@@ -59,10 +67,37 @@ public class FirstPersonController : MonoBehaviour {
 
     // Update is called once per frame
     private void Update() {
+        var p = GetComponent<PlayerBehavior>();
+
+        prevGamePadStateOne = currGamePadStateOne;
+        prevGamePadStateTwo = currGamePadStateTwo;
+        currGamePadStateOne = GamePad.GetState(PlayerIndex.One);
+        currGamePadStateTwo = GamePad.GetState(PlayerIndex.Two);
+
+
         RotateView();
         // the jump state needs to read here to make sure it is not missed
         if (!m_Jump) {
-            m_Jump = Input.GetButtonDown("Jump");
+            switch (p.playerType) {
+                default:
+                case PlayerBehavior.PlayerType.SinglePlayer:
+                    m_Jump = Input.GetButtonDown("Jump");
+                    break;
+                case PlayerBehavior.PlayerType.Player_A:
+                    if (prevGamePadStateOne.IsConnected) {
+                        m_Jump =
+                            prevGamePadStateOne.Buttons.A == ButtonState.Released &&
+                            currGamePadStateOne.Buttons.A == ButtonState.Pressed;
+                    }
+                    break;
+                case PlayerBehavior.PlayerType.Player_B:
+                    if (prevGamePadStateTwo.IsConnected) {
+                        m_Jump =
+                            prevGamePadStateTwo.Buttons.A == ButtonState.Released &&
+                            currGamePadStateTwo.Buttons.A == ButtonState.Pressed;
+                    }
+                    break;
+            }
         }
 
         if (!m_PreviouslyGrounded && m_CharacterController.isGrounded) {
@@ -180,16 +215,42 @@ public class FirstPersonController : MonoBehaviour {
 
 
     private void GetInput(out float speed) {
+        var p = GetComponent<PlayerBehavior>();
+
         // Read input
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float horizontal = 0, vertical = 0;
 
         bool waswalking = m_IsWalking;
+
+        switch (p.playerType) {
+            default:
+            case PlayerBehavior.PlayerType.SinglePlayer:
+                horizontal = Input.GetAxis("Horizontal");
+                vertical = Input.GetAxis("Vertical");
+                m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+                break;
+            case PlayerBehavior.PlayerType.Player_A:
+                if (prevGamePadStateOne.IsConnected) {
+                    horizontal = currGamePadStateOne.ThumbSticks.Left.X;
+                    vertical = currGamePadStateOne.ThumbSticks.Left.Y;
+                    m_IsWalking = 
+                        currGamePadStateOne.Buttons.LeftStick != ButtonState.Pressed;
+                }
+                break;
+            case PlayerBehavior.PlayerType.Player_B:
+                if (prevGamePadStateTwo.IsConnected) {
+                    horizontal = currGamePadStateTwo.ThumbSticks.Left.X;
+                    vertical = currGamePadStateTwo.ThumbSticks.Left.Y;
+                    m_IsWalking =
+                        currGamePadStateTwo.Buttons.LeftStick != ButtonState.Pressed;
+                }
+                break;
+        }
 
 #if !MOBILE_INPUT
         // On standalone builds, walk/run speed is modified by a key press.
         // keep track of whether or not the character is walking or running
-        m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+        //m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
 #endif
         // set the desired speed to be walking or running
         speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;

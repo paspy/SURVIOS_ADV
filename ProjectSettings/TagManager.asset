@@ -11,6 +11,8 @@ TagManager:
   - Ignitable
   - Projectile
   - Grabbable
+  - Pig
+  - Setting
   layers:
   - Default
   - TransparentFX

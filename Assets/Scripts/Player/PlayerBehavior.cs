@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DigitalRuby.PyroParticles;
+using XInputDotNetPure;
 
 public class PlayerBehavior : MonoBehaviour {
     public enum PlayerType { SinglePlayer = 0, Player_A, Player_B }
@@ -50,6 +50,16 @@ public class PlayerBehavior : MonoBehaviour {
     float throwingPower = 0;
     bool isLightOn;
 
+    GamePadState prevGamePadStateOne;
+    GamePadState currGamePadStateOne;
+
+    GamePadState prevGamePadStateTwo;
+    GamePadState currGamePadStateTwo;
+
+    bool castingKeyPress = false;
+    bool grabbingKeyPress = false;
+    bool lightKeyPress = false;
+
     private void Awake() {
         eyes = GetComponentInChildren<Camera>();
         fpctrl = GetComponent<FirstPersonController>();
@@ -71,6 +81,26 @@ public class PlayerBehavior : MonoBehaviour {
             default:
                 break;
         }
+
+        if (playerType != PlayerType.SinglePlayer) {
+            var rectTransform = HPIndicator.transform.parent.GetComponent<RectTransform>();
+            /*Left X*/
+            //rectTransform.offsetMin.x;
+            /*Right Width*/
+            //rectTransform.offsetMax.x;
+            /*Top Y*/
+            //rectTransform.offsetMax.y;
+            /*Bottom Height*/
+            //rectTransform.offsetMin.y;
+            var newBottom = (rectTransform.offsetMin.y - 130) / 2;
+            rectTransform.offsetMin = new Vector2(rectTransform.offsetMin.x, newBottom);
+            rectTransform = throwingIndicator.GetComponent<RectTransform>();
+            rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, rectTransform.localPosition.y / 2, rectTransform.localPosition.z);
+            rectTransform = castingIndicator.GetComponent<RectTransform>();
+            rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, rectTransform.localPosition.y / 2, rectTransform.localPosition.z);
+
+        }
+
         grabbedObject = null;
         isLightOn = false;
         damageColor = damageIndicator.color;
@@ -88,6 +118,52 @@ public class PlayerBehavior : MonoBehaviour {
         BaconIndicator.GetComponentInChildren<Text>().text = Bacon.ToString();
     }
 
+    void UpdateInput() {
+        prevGamePadStateOne = currGamePadStateOne;
+        prevGamePadStateTwo = currGamePadStateTwo;
+        currGamePadStateOne = GamePad.GetState(PlayerIndex.One);
+        currGamePadStateTwo = GamePad.GetState(PlayerIndex.Two);
+
+        switch (playerType) {
+            default:
+            case PlayerType.SinglePlayer:
+                lightKeyPress = Input.GetKeyDown(KeyCode.F);
+                grabbingKeyPress = Input.GetMouseButton(0);
+                castingKeyPress = Input.GetMouseButtonDown(1);
+
+                break;
+            case PlayerType.Player_A:
+                if (prevGamePadStateOne.IsConnected) {
+                    lightKeyPress =
+                        prevGamePadStateOne.Buttons.Y == ButtonState.Released &&
+                        currGamePadStateOne.Buttons.Y == ButtonState.Pressed;
+                    grabbingKeyPress =
+                        prevGamePadStateOne.Buttons.LeftShoulder == ButtonState.Pressed &&
+                        currGamePadStateOne.Buttons.LeftShoulder == ButtonState.Pressed;
+                    castingKeyPress =
+                        prevGamePadStateOne.Buttons.B == ButtonState.Released &&
+                        currGamePadStateOne.Buttons.B == ButtonState.Pressed;
+                }
+                break;
+            case PlayerType.Player_B:
+                if (prevGamePadStateTwo.IsConnected) {
+                    lightKeyPress =
+                        prevGamePadStateTwo.Buttons.Y == ButtonState.Released &&
+                        prevGamePadStateTwo.Buttons.Y == ButtonState.Pressed;
+                    grabbingKeyPress =
+                        prevGamePadStateTwo.Buttons.LeftShoulder == ButtonState.Pressed &&
+                        prevGamePadStateTwo.Buttons.LeftShoulder == ButtonState.Pressed;
+                    castingKeyPress =
+                        prevGamePadStateTwo.Buttons.B == ButtonState.Released &&
+                        prevGamePadStateTwo.Buttons.B == ButtonState.Pressed;
+
+                }
+                break;
+        }
+
+
+    }
+
     private void Update() {
 
         if (curDamageFading > 0) {
@@ -98,9 +174,11 @@ public class PlayerBehavior : MonoBehaviour {
 
         rayFromEye = eyes.ScreenPointToRay(screenPosV3);
 
+        UpdateInput();
+
         if (!fpctrl.IsJump && !fpctrl.IsJumping && fpctrl.IsWalking) {
 
-            if (Input.GetMouseButton(0) && !IsCasting) {
+            if (grabbingKeyPress && !IsCasting) {
 
                 if (Physics.Raycast(rayFromEye, out hitInfo, maxInterativeDistance) && !IsGrabbing) {
                     Debug.DrawLine(rayFromEye.origin, hitInfo.point, Color.yellow);
@@ -120,7 +198,7 @@ public class PlayerBehavior : MonoBehaviour {
                 cb.normalColor = Color.Lerp(Color.yellow, Color.red, throwingPower);
                 throwingIndicator.colors = cb;
 
-            } else if (!Input.GetMouseButton(0) && IsGrabbing) {
+            } else if (!grabbingKeyPress && IsGrabbing) {
                 grabbedObject.GetComponent<StoneBehavior>().ThrowStone(rayFromEye.direction * throwingPower * 100.0f);
                 grabbedObject = null;
                 IsGrabbing = false;
@@ -128,7 +206,7 @@ public class PlayerBehavior : MonoBehaviour {
                 throwingPower = 0.0f;
             }
 
-            if (Input.GetMouseButtonDown(1) && !IsGrabbing && !IsCasting && Mana >= 20) {
+            if (castingKeyPress && !IsGrabbing && !IsCasting && Mana >= 20) {
                 IsCasting = true;
                 castingIndicator.gameObject.SetActive(IsCasting);
             }
@@ -140,7 +218,7 @@ public class PlayerBehavior : MonoBehaviour {
                 CastingFirebolt();
             }
 
-            if (Input.GetKeyDown(KeyCode.F)) {
+            if (lightKeyPress) {
                 isLightOn = !isLightOn;
                 magicLight.gameObject.SetActive(isLightOn);
             }
@@ -155,15 +233,20 @@ public class PlayerBehavior : MonoBehaviour {
         if (Mana < 100) {
             if ((manaBuffer += Time.deltaTime) >= 1) {
                 manaBuffer = 0;
-                Mana++;
+                Mana += 2;
             }
+        }
+
+        if (HP <= 0) {
+            GameOverText.gameObject.SetActive(true);
+            GameOverText.color = Color.blue;
+            GameOverText.text = "LOST";
         }
 
         UpdateHUD();
     }
 
     private void CastingFirebolt() {
-
         if ((castingTime += Time.deltaTime) >= 1.5f) {
             var projectile = Instantiate(firebolt, rayFromEye.origin, Quaternion.identity);
             projectile.gameObject.GetComponent<FireboltBehavior>().movingDirection = rayFromEye.direction;
@@ -193,7 +276,7 @@ public class PlayerBehavior : MonoBehaviour {
 
     public void ApplyDamage(int amount) {
         curDamageFading = maxDamageFading / 255.0f;
-
+        HP += amount;
     }
 
 }
