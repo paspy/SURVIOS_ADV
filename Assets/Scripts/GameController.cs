@@ -99,8 +99,8 @@ public class GameController : MonoBehaviour {
 
 
     }
-    IEnumerator BackToMainDelay() {
-        yield return new WaitForSeconds(5.0f);
+    IEnumerator BackToMainDelay(float time = 10.0f) {
+        yield return new WaitForSeconds(time);
         BackToMainMenu();
     }
 

@@ -140,7 +140,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabber: {fileID: 0}
   speed: 0
-  damage: 20
+  damage: 10
+  damagePower: 15
+  damageRadius: 2.5
 --- !u!136 &136390944394574928
 CapsuleCollider:
   m_ObjectHideFlags: 1

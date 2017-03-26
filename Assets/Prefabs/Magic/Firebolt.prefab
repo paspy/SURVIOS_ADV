@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45990f1f752a1564181a63ae89cf28c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: 
+  owner: {fileID: 0}
   shootingEffect: {fileID: 4456508573392006}
   shootingSFXs:
   - {fileID: 8300000, guid: ca679721d8a1b6243acc9a7ce566789b, type: 3}
@@ -537,6 +537,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 83a3d45944f24b647a973099cc6fb1d3, type: 3}
   - {fileID: 8300000, guid: 222141dd968fb6447b5c790b6d87a27b, type: 3}
   speed: 20
+  damage: 25
   expolsionRadius: 5
   expolsionPower: 500
   expireTime: 5

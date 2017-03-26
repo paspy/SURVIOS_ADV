@@ -15,7 +15,7 @@ public class FireboltBehavior : MonoBehaviour {
     public float speed = 100.0f;
     public int damage = 20;
     public float expolsionRadius = 5.0f;
-    public float expolsionPower = 50.0f;
+    public float expolsionForce = 50.0f;
     public float expireTime = 5.0f;
     public Vector3 movingDirection;
     Rigidbody rigid;
@@ -24,18 +24,20 @@ public class FireboltBehavior : MonoBehaviour {
     private void Awake() {
         rigid = GetComponent<Rigidbody>();
         sfxSource = GetComponent<AudioSource>();
-        isExpired = false;
+        GetComponent<SphereCollider>().enabled = false;
         movingDirection = transform.forward;
     }
 
     private void Start() {
+        isExpired = false;
         rigid.velocity = movingDirection * speed;
         sfxSource.clip = shootingSFXs[Random.Range(0, shootingSFXs.Length)];
+        StartCoroutine(ActivateColliderDelay());
         if (!sfxSource.isPlaying)
             sfxSource.Play();
     }
 
-    private void FixUpdate() {
+    private void Update() {
         if ((expireTime -= Time.deltaTime) <= 0 && !isExpired) {
             isExpired = true;
             CreateExplosion();
@@ -48,6 +50,11 @@ public class FireboltBehavior : MonoBehaviour {
             rigid.velocity = Vector3.zero;
             CreateExplosion();
         }
+    }
+
+    IEnumerator ActivateColliderDelay() {
+        yield return new WaitForSeconds(0.5f);
+        GetComponent<SphereCollider>().enabled = true;
     }
 
     void CreateExplosion() {
@@ -76,7 +83,7 @@ public class FireboltBehavior : MonoBehaviour {
             if (grass != null)
                 grass.SetOnFire();
             if (rb != null)
-                rb.AddExplosionForce(expolsionPower, explosionPos, expolsionRadius, 3.0f);
+                rb.AddExplosionForce(expolsionForce, explosionPos, expolsionRadius, 3.0f);
         }
 
         Destroy(gameObject, 1.25f);

@@ -251,6 +251,7 @@ public class PlayerBehavior : MonoBehaviour {
 
     private void CastingFirebolt() {
         if ((castingTime += Time.deltaTime) >= 1.5f) {
+            Debug.DrawRay(rayFromEye.origin, rayFromEye.direction, Color.red, 3.0f, false);
             var projectile = Instantiate(firebolt, rayFromEye.origin, Quaternion.identity);
             projectile.gameObject.GetComponent<FireboltBehavior>().movingDirection = rayFromEye.direction;
             projectile.gameObject.GetComponent<FireboltBehavior>().owner = transform;

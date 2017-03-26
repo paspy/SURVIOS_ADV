@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StoneBehavior : MonoBehaviour {
@@ -8,7 +9,7 @@ public class StoneBehavior : MonoBehaviour {
     public float speed;
 
     public int damage = 10;
-    public float damagePower = 15.0f;
+    public float damageForce = 15.0f;
     public float damageRadius = 2.5f;
 
     Camera GrabberEyes;
@@ -73,18 +74,18 @@ public class StoneBehavior : MonoBehaviour {
 
     void CreateDamage() {
         Vector3 damagePos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(damagePos, damageRadius);
+        var colliders = Physics.OverlapSphere(damagePos, damageRadius).ToList();
+        var playerCol = colliders.Find(x => x.GetComponent<PlayerBehavior>() != null);
+        if (playerCol != null)
+            playerCol.GetComponent<PlayerBehavior>().ApplyDamage(-damage);
 
         foreach (Collider hit in colliders) {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             var pig = hit.GetComponent<PigBehavior>();
-            var player = hit.GetComponent<PlayerBehavior>();
-            if (pig != null)
+            if (pig != null && rb != null) {
                 pig.HitByProjectile(lastOwner);
-            if (rb != null)
-                rb.AddExplosionForce(damagePower, damagePos, damageRadius, 3.0f);
-            if (player != null)
-                player.ApplyDamage(-damage);
+                rb.AddExplosionForce(damageForce, damagePos, damageRadius, 3.0f);
+            }
         }
 
     }
